@@ -9,8 +9,12 @@ module.exports = {
     "@vue/eslint-config-prettier",
     "plugin:prettier/recommended",
     "plugin:tailwindcss/recommended",
+    "plugin:vitest-globals/recommended",
   ],
   parserOptions: {
     ecmaVersion: "latest",
+  },
+  env: {
+    "vitest-globals/env": true,
   },
 };
