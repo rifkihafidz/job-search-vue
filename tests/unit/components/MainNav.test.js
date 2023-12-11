@@ -1,17 +1,28 @@
 import { render, screen } from "@testing-library/vue";
+import userEvent from "@testing-library/user-event";
 
 import MainNav from "@/components/MainNav.vue";
 import { it } from "vitest";
 
 describe("MainNav", () => {
+  const renderMainNav = () => {
+    render(MainNav, {
+      global: {
+        stubs: {
+          FontAwesomeIcon: true,
+        },
+      },
+    });
+  };
+
   it("displays company name", () => {
-    render(MainNav);
+    renderMainNav();
     const companyName = screen.getByText("Job Portals");
     expect(companyName).toBeInTheDocument();
   });
 
   it("displays menu items for navigation", () => {
-    render(MainNav);
+    renderMainNav();
     const navigationMenuItems = screen.getAllByRole("listitem");
     const navigationmenuTexts = navigationMenuItems.map((item) => item.textContent);
     expect(navigationmenuTexts).toEqual([
@@ -22,5 +33,29 @@ describe("MainNav", () => {
       "Students",
       "Jobs",
     ]);
+  });
+
+  describe("When the user login", () => {
+    it("displays user profile picture", async () => {
+      renderMainNav();
+
+      let profileImage = screen.queryByRole("img", {
+        name: /user profile image/i,
+      });
+
+      expect(profileImage).not.toBeInTheDocument();
+
+      const loginButton = screen.getByRole("button", {
+        name: /sign in/i,
+      });
+
+      await userEvent.click(loginButton);
+
+      profileImage = screen.queryByRole("img", {
+        name: /user profile image/i,
+      });
+
+      expect(profileImage).toBeInTheDocument();
+    });
   });
 });
